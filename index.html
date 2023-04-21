@@ -73,7 +73,7 @@
     // ❗ Debug properly using the Console
 
     // 👉 CHALLENGE 1
-    function profileActivation() {
+    function profileActivation(profile, reason) {
       // 🧠 profileActivation takes two arguments, profile and reason, which are an object and a string respectively
       //  The reason arg is only used -and therefore required- to deactivate profiles, not to activate them
       //  The profile arg has an `active` property holding a Boolean value
@@ -85,10 +85,37 @@
       //    * If the profile is active but it has a `reason` prop, return the string "confirm status manually"
       //    * If the profile is **missing** an `active` prop, return the string "impossible to ascertain status"
       // 🌟 HINT: to confirm the existence of a prop, check that its value is not undefined
+
+      if((profile.active === true) && (typeof profile.reason =="string")){
+        return "confirm status manually"
+      }
+      if ((profile.active === false) && (typeof profile.reason =="undefined")){
+        return "confirm status manually"
+      }
+      if (typeof profile.active =="undefined"){
+        return "impossible to ascertain status"
+      }
+
+
+
+
+      if (profile.active === true) {
+        profile.active = false
+        profile.reason = reason
+        return profile
+      }
+      if (profile.active === false){
+        profile.active = true
+        delete profile.reason
+        return profile
+      }
+
+
+      return profile
     }
 
     // 👉 CHALLENGE 2
-    function mineSweeper() {
+    function mineSweeper(gridArr, x, y) {
       // 🧠 mineSweeper takes a grid as its first argument, and coordinates x and y as the second and third args
       //  The grid is an array of arrays in the following format: [["🟥","🟦","🟥"],["🟦","🟥","🟥"],["🟥","🟦","🟦"]]
       //  Each subarray is a row of the grid, the first subarray being the top row:
@@ -102,14 +129,37 @@
       //    * An x = 3 and y = 1 means the top-right square
       //    * An x = 3 and y = 3 means the bottom-right square
       //  Red squares are mines and blue squares are safe
+
+
       //    * If mineSweeper is called with such coordinates that the player lands on red, return the string "🟥 💀"
       //    * If the player lands on blue, return the string "🟦 🥳"
+
+  
       // 🧠 Edge cases:
       //    * If the x or y coordinates are under 1 or over 3, return the string "invalid coordinates"
-    }
+      
 
+      if ((x<1) || (x>3)){
+        return "invalid coordinates"
+      }
+      if ((y<1) || (y>3)){
+        return "invalid coordinates"
+      }
+
+      y--
+      x--
+
+      if (gridArr[y][x] === "🟦"){
+        return "🟦 🥳"
+      }
+      if(gridArr[y][x] === "🟥"){
+        return "🟥 💀"
+      }
+
+
+    }
     // 👉 CHALLENGE 3
-    function booleanize() {
+    function booleanize(obj) {
       // 🧠 booleanize takes an object as its single argument, which can have any number of properties
       // Loop over the properties and then return the object, after applying the following transformations:
       //    * If a value is the number zero, it must be transformed into the Boolean false
@@ -118,10 +168,35 @@
       // 🧠 Edge cases:
       //    * If a property name exceeds 9 characters, return the string "shorten all prop names to 9 chars or less"
       // 🌟 HINT: careful not to perform any unintended changes on the object
+    
+
+      
+
+      for (const key in obj) {
+
+          if (key.length > 9){
+            return "shorten all prop names to 9 chars or less"
+          }
+
+          if (obj[key] === 0) {
+            obj[key] = false
+          }
+          if (obj[key] === 1){
+            obj[key] = true
+          }
+          if (obj[key] === null){
+            delete obj[key]
+          }
+
+
+          
+        }
+    return obj
+  
     }
 
     // 👉 CHALLENGE 4
-    function scrub() {
+    function scrub(text, forbidden) {
       // 🧠 scrub takes a string "text" as its first argument, and an array of forbidden words "forbidden" as its second
       // Any word in the text included in the array of forbidden words is replaced with a word of equal length but made of lowcase "x"
       // The scrubbed text is then returned from the function, as seen in the examples below
@@ -133,10 +208,31 @@
       //    scrub("aces high", ["high", "aces", "hearts"]) // returns "xxxx xxxx"
       //    scrub("", ["high", "aces""]) // returns ""
       // 🌟 HINT: useful array methods to use are `push`, `indexOf`, `split`, `join`
+
+      let textArr = text.split(' ')
+     
+      let newString = []
+
+    
+
+
+      textArr.forEach(word => {
+        if (forbidden.includes(word)){
+          bwArr = word.replace(/./gm, "x")
+          
+          return newString.push(bwArr)
+        }
+
+       newString.push(word)
+
+      });
+      return newString.join(" ")
+
+
     }
 
     // 👉 CHALLENGE 5
-    function normalizePhoneNumber() {
+    function normalizePhoneNumber(number) {
       // 🧠 normalizePhoneNumber takes a string as its only argument, representing a ten-digit number
       // The function returns a string formatted as seen below
       // 🧠 Examples of usage:
@@ -148,6 +244,35 @@
       // 🌟 HINT: instead of looping over the number's digits, loop backwards over a template "(XXX) XXX-XXXX"
       // 🌟 HINT: at each iteration, if the current character is an "X", replace it with the result of popping a digit from the number
       // 🌟 HINT: if you'd rather loop forwards, use `shift` instead of `pop`
+      const regex = /[^0-9]/gm
+      
+      
+      if (number.length === 10) {
+        if(number.search(regex) >= 0){
+        return "invalid phone number"
+        }
+        else{
+          return `(${number.slice(0,3)}) ${number.slice(3,6)}-${number.slice(6,10)}`
+        }
+      }
+      else{
+        return "type a 10-digit number"
+      }
+      
+      
+
+
+
+
+
+
+
+
+
+
+
+
+      
     }
 
     // 👉 CHALLENGE 6 (bonus, NOT graded)
@@ -158,7 +283,50 @@
       // 🌟 HINT: research using `Math.random` to obtain a number from 1 to 6
       // 🌟 HINT: use `while(true)` to throw the dice indefinitely, but avoid an infinite loop by making sure to break out eventually
       // 🌟 HINT: you need to keep track of the total number of throws, as well as how many sixes in a row
+
+      let crit = 0
+      let counter = 0
+
+      do {
+        roll = Math.floor((Math.random() * (7 - 1) + 1))
+        console.log(roll)
+        if (roll === 6){
+          crit++
+          counter++
+        }
+        if (roll !== 6){
+          crit = 0
+          counter++
+        }
+
+
+        else{
+          counter++
+        }
+
+        // console.log(`crit stacks : ${crit} || counter: ${counter}`)
+
+        if(counter === 250){
+        // console.log("It aint gon' happen cheif")
+        return counter
+      }
+      if (crit === 3){
+        // console.log("Well there yah have it")
+        return counter
+      }
+        
+      } while ((crit < 3) && (counter < 250))
+
+
+
+      
+      
+
+
     }
+    
+   
+    
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
